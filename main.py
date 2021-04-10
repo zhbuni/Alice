@@ -142,12 +142,10 @@ def handle_dialog(res, req):
             ]
             sessionStorage[user_id]['game_started'] = True
     else:
-        if req['request']['command'] in ['Пока', 'хватит', 'стоп', 'удачи', 'до свидания']:
+        if req['request']['command'].lower() in ['пока', 'хватит', 'стоп', 'удачи', 'до свидания']:
             res['response']['text'] = "До встречи!"
             res['response']['tts'] = "До встречи!"
             return
-        if not sessionStorage[user_id]['game_started']:
-            pass
         else:
             guess_word_stress(res, req)
 
@@ -163,17 +161,18 @@ def guess_word_stress(res, req):
         if value == dict_of_words[previous_word]:
             res['response']['text'] = '{}! А здесь? {}'.format(random.choice(praise_words),
                                                                ''.join(word.split(', ')))
-            res['response']['tts'] = ' <speaker audio=\"alice-sounds-game-win-1.opus\"> {}! А здесь? {}'.format(random.choice(praise_words),
-                                                               ''.join(word.split(', ')))
+            res['response']['tts'] = ' <speaker audio=\"alice-sounds-game-win-1.opus\"> {}! А здесь? {}'.format(
+                random.choice(praise_words),
+                ''.join(word.split(', ')))
         else:
             res['response']['text'] = """{}, ударение падает
-             на {}. Давай дальше. {}""".format(random.choice(dissaproval_words),
-                                               dict_of_words[previous_word],
-                                               ''.join(word.split(', ')))
+             на {}. Давай дальше - {}""".format(random.choice(dissaproval_words),
+                                                dict_of_words[previous_word],
+                                                ''.join(word.split(', ')))
             res['response']['tts'] = """{}, ударение падает
-             на {}. Давай дальше. {}""".format(random.choice(dissaproval_words),
-                                               dict_of_words[previous_word],
-                                               ''.join(word.split(', ')))
+             на {}. Давай дальше - {}""".format(random.choice(dissaproval_words),
+                                                dict_of_words[previous_word],
+                                                ''.join(word.split(', ')))
     else:
         res['response']['text'] = ''.join(word.split(', '))
     res['response']['buttons'] = get_buttons(word, user_id)
